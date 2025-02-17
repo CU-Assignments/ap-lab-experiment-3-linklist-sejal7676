@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+
+    Node(int value) {
+        data = value;
+        next = nullptr;
+    }
+};
+
+void insertEnd(Node*& head, int value) {
+    Node* newNode = new Node(value);
+    if (head == nullptr) {
+        head = newNode;
+    } else {
+        Node* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+bool detectCycle(Node* head) {
+    if (head == nullptr || head->next == nullptr) {
+        return false;  // No cycle in an empty or single-node list
+    }
+
+    Node* slow = head;  // Tortoise (slow pointer)
+    Node* fast = head;  // Hare (fast pointer)
+
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;         // Move slow by 1 step
+        fast = fast->next->next;   // Move fast by 2 steps
+
+        if (slow == fast) {
+            return true;  // Cycle detected
+        }
+    }
+
+    return false;  // No cycle
+}
+
+int main() {
+    Node* head = nullptr;
+
+    insertEnd(head, 10);
+    insertEnd(head, 20);
+    insertEnd(head, 30);
+    insertEnd(head, 40);
+
+    head->next->next->next->next = head->next;  // Cycle: 40 -> 20
+
+    if (detectCycle(head)) {
+        cout << "Cycle detected in the linked list!" << endl;
+    } else {
+        cout << "No cycle detected in the linked list!" << endl;
+    }
+
+    return 0;
+}
